@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">好天气</string>
+
+    <string name="floating_action_behavior">net.gility.okweather.ui.misc.FloatingActionButtonScrollBehavior</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="error_find_version_name">找不到版本名</string>
+
+    <string name="fab_dialog_title">点赞</string>
+    <string name="fab_dialog_message">去项目地址给作者个Star，鼓励下作者</string>
+    <string name="fab_dialog_positive">确定</string>
+
+    <string name="about_dialog_title">就看天气的完成离不开开源项目的支持，向以下致谢:</string>
+    <string name="about_dialog_message">Google Support Design,Gson,Rxjava,RxAndroid,Retrofit,Picasso,Dagger2,systembartint</string>
+    <string name="about_dialog_positive">关闭</string>
+    
+    <string name="no_network">网络不好</string>
+    <string name="headerTxt">好天气</string>
+    <string name="title_activity_settings">设置</string>
+    <string name="api_error">出了点小问题，别担心</string>
+    <string name="version_name">好天气 Version-</string>
+    <string name="can_not_find_version_name">找不到版本号</string>
+    <string name="share_txt">欢迎使用“好天气”，希望每天都是好心情</string>
+    <string name="share_app">分享-好天气</string>
+    <string name="alipay">gility@163.com</string>
+    <string name="license">Copyright 2016 Michael Li  Licensed under the Apache License, Version 2.0 (the \"License\")</string>
+    <string name="app_html">https://github.com/alimy/OkWeather</string>
+    <string name="readme">https://github.com/alimy/OkWeather/blob/master/README.md</string>
+
+    <string name="chage_icon">更换图标</string>
+    <string name="nav_city">选择城市</string>
+    <string name="setting">设置</string>
+    <string name="about">关于</string>
+    <string name="multi_cities">多城市管理</string>
+    <string name="double_exit">再按一次退出</string>
+    <string name="complete">加载完毕</string>
+    <string name="errorLocation">定位失败,加载默认城市</string>
+    <string-array name="icons">
+        <item>图标一</item>
+        <item>图标二</item>
+    </string-array>
+
+    <string-array name="cache_time">
+        <item>禁止刷新</item>
+        <item>每1小时</item>
+        <item>每3小时</item>
+        <item>每6小时</item>
+    </string-array>
+</resources>
