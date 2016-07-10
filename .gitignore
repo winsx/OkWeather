@@ -11,5 +11,6 @@
 *.keystore
 gradle.properties
 obj/
+/app/config
 
 app/src/main/java/net/gility/okweather/config/BuildVars.java
