@@ -58,7 +58,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.setting);
-        Injector.obtain(getActivity().getApplication()).inject(this);
+        Injector.instance.inject(this);
 
         mContext = getActivity().getApplicationContext();
         mChangeIcons = findPreference(mPreferences.CHANGE_ICONS);

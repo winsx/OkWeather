@@ -44,7 +44,6 @@ public interface AppComponent {
     void inject(IconDialogFragment iconDialogFragment);
     void inject(MainFragment mainFragment);
     void inject(AboutFragment aboutFragment);
-    void inject(WeatherAdapter weatherAdapter);
     void inject(WeatherDialogCell weatherDialogCell);
     void inject(WeatherDailyForecastCell weatherDailyForecastCell);
     void inject(WeatherTemperatureCell weatherTemperatureCell);

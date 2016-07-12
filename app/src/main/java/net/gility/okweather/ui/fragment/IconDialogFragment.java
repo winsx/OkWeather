@@ -38,7 +38,7 @@ public class IconDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
-        Injector.obtain(getActivity().getApplication()).inject(this);
+        Injector.instance.inject(this);
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         IconDialogCell  iconDialogCell = (IconDialogCell) inflater.inflate(R.layout.cell_dialog_icon, (ViewGroup) getActivity().findViewById(R.id.dialog_root));

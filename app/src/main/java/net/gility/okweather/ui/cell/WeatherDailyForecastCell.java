@@ -44,7 +44,7 @@ public class WeatherDailyForecastCell extends LinearCell<DailyForecastEntity> {
     public WeatherDailyForecastCell(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        Injector.obtain(getContext().getApplicationContext()).inject(this);
+        Injector.instance.inject(this);
     }
 
     @Override

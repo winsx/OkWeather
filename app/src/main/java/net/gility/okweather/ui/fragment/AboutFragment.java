@@ -76,7 +76,7 @@ public class AboutFragment extends PreferenceFragment implements Preference.OnPr
 
         mVersion.setSummary(getActivity().getString(R.string.version_name) + AppUtils.getVersion(getActivity()));
 
-        Injector.obtain(getActivity().getApplication()).inject(this);
+        Injector.instance.inject(this);
     }
 
     @Override

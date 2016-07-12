@@ -44,7 +44,7 @@ public class WeatherTemperatureCell extends CardViewCell<Weather> {
     public WeatherTemperatureCell(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        Injector.obtain(getContext().getApplicationContext()).inject(this);
+        Injector.instance.inject(this);
     }
 
     @Override

@@ -47,7 +47,7 @@ public class AutoUpdateService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Injector.obtain(getApplication()).inject(this);
+        Injector.instance.inject(this);
 
         mCompositeSubscription = new CompositeSubscription();
     }

@@ -85,7 +85,7 @@ public class MainFragment extends Fragment implements AMapLocationListener {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, rootView);
-        Injector.obtain(getActivity().getApplication()).inject(this);
+        Injector.instance.inject(this);
 
         initView();
         initRx();

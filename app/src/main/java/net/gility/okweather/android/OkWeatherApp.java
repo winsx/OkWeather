@@ -23,7 +23,6 @@ import javax.inject.Inject;
  */
 
 public class OkWeatherApp extends Application {
-    private AppComponent appComponent;
     @Inject ActivityHierarchyServer activityHierarchyServer;
     @Inject Preferences mPreferences;
 
@@ -31,10 +30,8 @@ public class OkWeatherApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
-        appComponent.inject(this);
+        Injector.build(this);
+        Injector.instance.inject(this);
 
         registerActivityLifecycleCallbacks(activityHierarchyServer);
 
@@ -53,14 +50,6 @@ public class OkWeatherApp extends Application {
         }
 
         checkFirstStart();
-    }
-
-    @Override
-    public Object getSystemService(@NonNull String name) {
-        if (Injector.matchesService(name)) {
-            return appComponent;
-        }
-        return super.getSystemService(name);
     }
 
     private void checkFirstStart() {

@@ -85,6 +85,6 @@ public class WeatherDialogCell extends RelativeLayout {
         super.onFinishInflate();
 
         ButterKnife.bind(this);
-        Injector.obtain(getContext().getApplicationContext()).inject(this);
+        Injector.instance.inject(this);
     }
 }

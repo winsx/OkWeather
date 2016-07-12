@@ -29,7 +29,7 @@ public class SettingsActivity extends BaseActivity {
         //http://stackoverflow.com/questions/26486730/in-android-app-toolbar-settitle-method-has-no-effect-application-name-is-shown
         setContentView(R.layout.activity_setting);
 
-        Injector.obtain(getApplication()).inject(this);
+        Injector.instance.inject(this);
 
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();

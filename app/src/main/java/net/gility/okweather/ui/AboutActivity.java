@@ -1,6 +1,5 @@
 package net.gility.okweather.ui;
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import butterknife.BindView;
 
 public class AboutActivity extends BaseActivity {
 
-    FragmentTransaction mFragmentTransaction;
     AboutFragment mAboutFragment = new AboutFragment();
 
     @BindView(R.id.appbar_layout) AppBarLayout mAppBar;
@@ -38,7 +36,7 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        Injector.obtain(getApplication()).inject(this);
+        Injector.instance.inject(this);
 
         initActionBar();
 

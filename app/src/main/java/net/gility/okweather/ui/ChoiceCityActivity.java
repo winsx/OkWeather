@@ -72,7 +72,7 @@ public class ChoiceCityActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice_city);
 
-        Injector.obtain(getApplication()).inject(this);
+        Injector.instance.inject(this);
 
         initView();
 

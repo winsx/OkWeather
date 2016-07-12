@@ -1,21 +1,18 @@
 package net.gility.okweather.dagger;
 
-import android.content.Context;
+import net.gility.okweather.android.OkWeatherApp;
 
 /**
  * @author Alimy
  */
 
 public final class Injector {
-    private static final String INJECTOR_SERVICE = "net.gility.okweather.dagger.injector";
+    public static AppComponent instance;
 
-    @SuppressWarnings({"ResourceType", "WrongConstant"}) // Explicitly doing a custom service.
-    public static AppComponent obtain(Context context) {
-        return (AppComponent) context.getSystemService(INJECTOR_SERVICE);
-    }
-
-    public static boolean matchesService(String name) {
-        return INJECTOR_SERVICE.equals(name);
+    public static void build(OkWeatherApp app) {
+        instance = DaggerAppComponent.builder()
+                .appModule(new AppModule(app))
+                .build();
     }
 
     private Injector() {
