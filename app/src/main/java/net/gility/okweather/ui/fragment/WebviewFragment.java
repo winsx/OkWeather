@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,8 +23,9 @@ import butterknife.ButterKnife;
  */
 
 public class WebviewFragment extends Fragment {
+    public static final String TAG = "WebView";
     View rootView;
-    @BindView(R.id.webview) WebView mWebView;
+    @BindView(R.id.webview) public WebView mWebView;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
 
     @Nullable
@@ -32,8 +34,12 @@ public class WebviewFragment extends Fragment {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_webview, container, false);
             ButterKnife.bind(this, rootView);
-            mWebView.getSettings().setSupportZoom(true);
-            mWebView.getSettings().setBuiltInZoomControls(true);
+
+            WebSettings settings = mWebView.getSettings();
+            settings.setSupportZoom(true);
+            settings.setBuiltInZoomControls(true);
+            settings.setJavaScriptEnabled(true);
+
             mWebView.setWebChromeClient(new WebFragmentClient());
             mWebView.setWebViewClient(new WebViewClient() {
                 @Override

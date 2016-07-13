@@ -103,7 +103,6 @@ public class ChoiceCityActivity extends BaseActivity {
     }
 
     private void initRecyclerView() {
-        mRecyclerview.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setItemAnimator(new FadeInUpAnimator());
         mAdapter = new CityAdapter(this, dataList);

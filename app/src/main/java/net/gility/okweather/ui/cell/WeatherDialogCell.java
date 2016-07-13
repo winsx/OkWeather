@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
  * @author Alimy
  */
 
-public class WeatherDialogCell extends RelativeLayout {
+public class WeatherDialogCell extends BaseRelativeCell {
 
     @BindView(R.id.weather_dialog_root) RelativeLayout mRootView;
     @BindView(R.id.dialog_city) TextView mCity;
@@ -84,7 +84,6 @@ public class WeatherDialogCell extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        ButterKnife.bind(this);
         Injector.instance.inject(this);
     }
 }

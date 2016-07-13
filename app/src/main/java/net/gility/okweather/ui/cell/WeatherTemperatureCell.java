@@ -21,7 +21,7 @@ import butterknife.BindView;
  * @author Alimy
  */
 
-public class WeatherTemperatureCell extends CardViewCell<Weather> {
+public class WeatherTemperatureCell extends CardCell<Weather> {
 
     @BindView(R.id.weather_icon) ImageView weatherIcon;
     @BindView(R.id.temp_flu) TextView tempFlu;
@@ -48,7 +48,7 @@ public class WeatherTemperatureCell extends CardViewCell<Weather> {
     }
 
     @Override
-    public void bind(Weather weather) {
+    public void bindTo(Weather weather) {
         try {
             tempFlu.setText(String.format("%s℃", weather.now.tmp));
             tempMax.setText(String.format("↑ %s °", weather.dailyForecast.get(0).tmp.max));

@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
  * @author Alimy
  */
 
-public class IconDialogCell extends RelativeLayout {
+public class IconDialogCell extends BaseRelativeCell {
 
     public static final int TYPE_ONE = 0;
     public static final int TYPE_TWO = 1;
@@ -74,7 +74,6 @@ public class IconDialogCell extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        ButterKnife.bind(this);
         init();
     }
 

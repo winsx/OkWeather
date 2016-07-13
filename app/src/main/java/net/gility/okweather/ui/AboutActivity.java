@@ -1,6 +1,5 @@
 package net.gility.okweather.ui;
 
-import android.app.FragmentTransaction;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -13,6 +12,7 @@ import net.gility.okweather.R;
 import net.gility.okweather.dagger.Injector;
 import net.gility.okweather.storage.Preferences;
 import net.gility.okweather.ui.fragment.AboutFragment;
+import net.gility.okweather.ui.fragment.WebviewFragment;
 
 import javax.inject.Inject;
 
@@ -71,5 +71,15 @@ public class AboutActivity extends BaseActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        WebviewFragment fragment = (WebviewFragment) getFragmentManager().findFragmentByTag(WebviewFragment.TAG);
+        if (fragment != null && fragment.mWebView.canGoBack()) {
+            fragment.mWebView.goBack();
+            return;
+        }
+        super.onBackPressed();
     }
 }

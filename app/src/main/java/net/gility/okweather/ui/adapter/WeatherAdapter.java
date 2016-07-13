@@ -5,25 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import net.gility.okweather.R;
-import net.gility.okweather.dagger.Injector;
 import net.gility.okweather.model.Weather;
-import net.gility.okweather.storage.Preferences;
 import net.gility.okweather.ui.cell.WeatherDailyForecastCell;
 import net.gility.okweather.ui.cell.WeatherHourlyForecastCell;
 import net.gility.okweather.ui.cell.WeatherSuggestionCell;
 import net.gility.okweather.ui.cell.WeatherTemperatureCell;
-import net.gility.okweather.utils.AppUtils;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * @author Alimy
@@ -87,19 +78,19 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int itemType = getItemViewType(position);
+        int itemType = holder.getItemViewType();
         switch (itemType) {
             case TYPE_ONE:
-                ((NowWeatherViewHolder) holder).bind(mWeather);
+                ((NowWeatherViewHolder) holder).bindTo(mWeather);
                 break;
             case TYPE_TWO:
-                ((HoursWeatherViewHolder) holder).bind(mWeather.hourlyForecast);
+                ((HoursWeatherViewHolder) holder).bindTo(mWeather.hourlyForecast);
                 break;
             case TYPE_THREE:
-                ((SuggestionViewHolder) holder).bind(mWeather.suggestion);
+                ((SuggestionViewHolder) holder).bindTo(mWeather.suggestion);
                 break;
             case TYPE_FORE:
-                ((ForecastViewHolder) holder).bind(mWeather.dailyForecast);
+                ((ForecastViewHolder) holder).bindTo(mWeather.dailyForecast);
                 break;
             default:
                 break;
@@ -121,8 +112,8 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter<RecyclerView.ViewHol
             super(itemView);
         }
 
-        public void bind(Weather weather) {
-            ((WeatherTemperatureCell) itemView).bind(weather);
+        public void bindTo(Weather weather) {
+            ((WeatherTemperatureCell) itemView).bindTo(weather);
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
@@ -143,11 +134,11 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter<RecyclerView.ViewHol
             mHourInfoLinearlayout = (LinearLayout) itemView.findViewById(R.id.item_hour_info_linearlayout);
         }
 
-        public void bind(List<Weather.HourlyForecastEntity> hourlyForecasts) {
+        public void bindTo(List<Weather.HourlyForecastEntity> hourlyForecasts) {
             mHourInfoLinearlayout.removeAllViews();
             for (int i = 0; i < hourlyForecasts.size(); i++) {
                 View view = View.inflate(mContext, R.layout.cell_weather_hourly_forecast, null);
-                ((WeatherHourlyForecastCell) view).bind(hourlyForecasts.get(i));
+                ((WeatherHourlyForecastCell) view).bindTo(hourlyForecasts.get(i));
 
                 mHourInfoLinearlayout.addView(view);
             }
@@ -163,8 +154,8 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter<RecyclerView.ViewHol
             super(itemView);
         }
 
-        public void bind(Weather.SuggestionEntity suggestion) {
-            ((WeatherSuggestionCell) itemView).bind(suggestion);
+        public void bindTo(Weather.SuggestionEntity suggestion) {
+            ((WeatherSuggestionCell) itemView).bindTo(suggestion);
         }
     }
 
@@ -179,7 +170,7 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter<RecyclerView.ViewHol
             mForecastLinear = (LinearLayout) itemView.findViewById(R.id.forecast_linear);
         }
 
-        public void bind(List<Weather.DailyForecastEntity> dailyForecasts) {
+        public void bindTo(List<Weather.DailyForecastEntity> dailyForecasts) {
             final int items = dailyForecasts.size();
             WeatherDailyForecastCell[] mCells = new WeatherDailyForecastCell[items];
 
@@ -187,7 +178,7 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter<RecyclerView.ViewHol
 
             for (int i = 0; i < dailyForecasts.size(); i++) {
                 mCells[i] = (WeatherDailyForecastCell) View.inflate(mContext, R.layout.cell_weather_daily_forecast, null);
-                mCells[i].bind(dailyForecasts.get(i));
+                mCells[i].bindTo(dailyForecasts.get(i));
 
                 mForecastLinear.addView(mCells[i]);
             }

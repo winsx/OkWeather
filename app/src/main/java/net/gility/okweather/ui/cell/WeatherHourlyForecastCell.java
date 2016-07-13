@@ -34,7 +34,7 @@ public class WeatherHourlyForecastCell extends LinearCell<HourlyForecastEntity> 
     }
 
     @Override
-    public void bind(HourlyForecastEntity data) {
+    public void bindTo(HourlyForecastEntity data) {
         try {
                 //s.subString(s.length-3,s.length);
                 //第一个参数是开始截取的位置，第二个是结束位置。

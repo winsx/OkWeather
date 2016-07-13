@@ -151,7 +151,7 @@ public class AboutFragment extends PreferenceFragment implements Preference.OnPr
         getActivity().getFragmentManager()
                 .beginTransaction()
                 .addToBackStack(null)
-                .add(R.id.framelayout, webviewFragment, "webview")
+                .add(R.id.framelayout, webviewFragment, WebviewFragment.TAG)
                 .commit();
     }
 }

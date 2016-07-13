@@ -14,7 +14,7 @@ import static net.gility.okweather.model.Weather.SuggestionEntity;
  * @author Alimy
  */
 
-public class WeatherSuggestionCell extends CardViewCell<SuggestionEntity> {
+public class WeatherSuggestionCell extends CardCell<SuggestionEntity> {
     @BindView(R.id.cloth_brief) TextView clothBrief;
     @BindView(R.id.cloth_txt) TextView clothTxt;
     @BindView(R.id.sport_brief) TextView sportBrief;
@@ -37,7 +37,7 @@ public class WeatherSuggestionCell extends CardViewCell<SuggestionEntity> {
     }
 
     @Override
-    public void bind(SuggestionEntity suggestion) {
+    public void bindTo(SuggestionEntity suggestion) {
         try {
             clothBrief.setText(String.format("穿衣指数---%s", suggestion.drsg.brf));
             clothTxt.setText(suggestion.drsg.txt);

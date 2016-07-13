@@ -25,7 +25,7 @@ import static net.gility.okweather.model.Weather.DailyForecastEntity;
 
 public class WeatherDailyForecastCell extends LinearCell<DailyForecastEntity> {
 
-    @BindView(R.id.forecast_date) TextView mDate;
+    @BindView(R.id.forecast_date) public TextView mDate;
     @BindView(R.id.forecast_temp) TextView mTemp;
     @BindView(R.id.forecast_txt) TextView mTxt;
     @BindView(R.id.forecast_icon) ImageView mIcon;
@@ -48,7 +48,7 @@ public class WeatherDailyForecastCell extends LinearCell<DailyForecastEntity> {
     }
 
     @Override
-    public void bind(DailyForecastEntity data) {
+    public void bindTo(DailyForecastEntity data) {
         try {
             try {
                 mDate.setText(AppUtils.dayForWeek(data.date));

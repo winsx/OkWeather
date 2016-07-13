@@ -10,7 +10,7 @@ import butterknife.ButterKnife;
  * @author Alimy
  */
 
-public abstract class LinearCell<T> extends LinearLayout {
+public abstract class LinearCell<T> extends BaseLinearCell implements BindCell<T> {
     public LinearCell(Context context) {
         super(context);
     }
@@ -22,13 +22,4 @@ public abstract class LinearCell<T> extends LinearLayout {
     public LinearCell(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
-    @Override
-    public void onFinishInflate() {
-        super.onFinishInflate();
-
-        ButterKnife.bind(this);
-    }
-
-    public abstract void bind(T data);
 }
