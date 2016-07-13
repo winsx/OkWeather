@@ -18,6 +18,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -61,7 +63,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.toolbar_layout) CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.fab) FloatingActionButton mFab;
 
-    // @BindView(R.id.header_background) FrameLayout mNavHeaderView;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
 
@@ -142,14 +143,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void showEggs() {
         //彩蛋-夜间模式
         Calendar calendar = Calendar.getInstance();
-        mPreferences.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
-        setStatusBarColorForKitkat(R.color.colorSunrise);
-        mPicasso.load(R.mipmap.sunrise).into(mBanner);
-        if (mPreferences.getCurrentHour() < 6 || mPreferences.getCurrentHour() > 18) {
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        mPreferences.setCurrentHour(currentHour);
+
+        if (currentHour < 6 || currentHour > 18) {
             mPicasso.load(R.mipmap.sunset).into(mBanner);
             mCollapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(this, R.color.colorSunset));
             setStatusBarColorForKitkat(R.color.colorSunset);
-            // mNavHeaderView.setBackgroundResource(R.mipmap.header_back_night );
+            mNavigationView.getHeaderView(0).setBackgroundResource(R.mipmap.header_back_night );
+        } else {
+            setStatusBarColorForKitkat(R.color.colorSunrise);
+            mPicasso.load(R.mipmap.sunrise).into(mBanner);
+            mCollapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(this, R.color.colorSunrise));
+            mNavigationView.getHeaderView(0).setBackgroundResource(R.mipmap.header_back_day);
         }
     }
 
