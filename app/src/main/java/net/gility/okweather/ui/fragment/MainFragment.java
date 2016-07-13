@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,6 @@ import net.gility.okweather.config.BuildVars;
 import net.gility.okweather.dagger.Injector;
 import net.gility.okweather.model.ChangeCityEvent;
 import net.gility.okweather.model.ChangeIconTypeEvent;
-import net.gility.okweather.model.UpdateCityWeatherEvent;
 import net.gility.okweather.model.UpdateWeatherErrorEvent;
 import net.gility.okweather.model.UpdateWeatherEvent;
 import net.gility.okweather.model.Weather;
@@ -96,7 +94,6 @@ public class MainFragment extends Fragment implements AMapLocationListener {
     private void initView() {
         mRefreshLayout.setOnRefreshListener(() -> mRefreshLayout.postDelayed(this::load, 1000));
         mProgressBar.setVisibility(View.VISIBLE);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new WeatherAdapter(getActivity());
         mRecyclerView.setAdapter(mAdapter);
@@ -292,11 +289,8 @@ public class MainFragment extends Fragment implements AMapLocationListener {
                 mACache.put(BuildVars.WEATHER_CACHE, weather,
                         (mPreferences.getAutoUpdate() * Preferences.ONE_HOUR));//默认3小时后缓存失效
             }
-            mRxBus.post(new UpdateCityWeatherEvent(weather));
             mAdapter.updateData(weather);
             normalStyleNotification(weather);
         }
     };
-
-
 }

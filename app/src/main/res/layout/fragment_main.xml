@@ -11,9 +11,12 @@
         android:layout_margin="8dp">
 
         <android.support.v7.widget.RecyclerView
+            xmlns:view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/recyclerview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            view:layoutManager="LinearLayoutManager"/>
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <include
