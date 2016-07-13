@@ -9,7 +9,7 @@ import net.gility.okweather.android.OkWeatherApp;
 public final class Injector {
     public static AppComponent instance;
 
-    public static void build(OkWeatherApp app) {
+    public static void initStatic(OkWeatherApp app) {
         instance = DaggerAppComponent.builder()
                 .appModule(new AppModule(app))
                 .build();

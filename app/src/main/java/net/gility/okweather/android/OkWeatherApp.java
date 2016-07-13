@@ -30,7 +30,7 @@ public class OkWeatherApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Injector.build(this);
+        Injector.initStatic(this);
         Injector.instance.inject(this);
 
         registerActivityLifecycleCallbacks(activityHierarchyServer);
