@@ -12,28 +12,24 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.hwangjr.rxbus.Bus;
+import com.hwangjr.rxbus.annotation.Subscribe;
+import com.hwangjr.rxbus.annotation.Tag;
+import com.hwangjr.rxbus.thread.EventThread;
 
 import net.gility.okweather.R;
 import net.gility.okweather.android.AutoUpdateService;
 import net.gility.okweather.dagger.Injector;
-import net.gility.okweather.model.ChangeIconTypeEvent;
+import net.gility.okweather.model.BusAction;
 import net.gility.okweather.storage.ACache;
 import net.gility.okweather.storage.Preferences;
-import net.gility.okweather.ui.cell.IconDialogCell;
 import net.gility.okweather.utils.AndroidUtils;
 import net.gility.okweather.utils.AppUtils;
-import net.gility.okweather.utils.RxBus;
 
 import javax.inject.Inject;
-
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * @author Alimy
@@ -42,15 +38,13 @@ import rx.subscriptions.CompositeSubscription;
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
     @Inject Preferences mPreferences;
     @Inject ACache mACache;
-    @Inject Picasso mPicasso;
-    @Inject RxBus mRxBus;
+    @Inject Bus mBus;
 
     private Preference mChangeIcons;
     private Preference mChangeUpdate;
     private Preference mClearCache;
     private SwitchPreference mNotificationType;
     private Context mContext;
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
     private String[] mIconsText;
 
     @Override
@@ -59,6 +53,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         addPreferencesFromResource(R.xml.setting);
         Injector.instance.inject(this);
+        mBus.register(this);
 
         mContext = getActivity().getApplicationContext();
         mChangeIcons = findPreference(mPreferences.CHANGE_ICONS);
@@ -101,13 +96,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         return false;
     }
 
+    @Subscribe(
+            thread = EventThread.MAIN_THREAD,
+            tags = {
+                    @Tag(BusAction.CHANGE_ICONS_TYPE)
+            }
+    )
+    public void changeIconsTypeAction(Integer type) {  // Note: don't use int instead Integer as param Type
+        mChangeIcons.setSummary(type == 0 ? mIconsText[0] : mIconsText[1]);
+        showSnack();
+    }
+
     private void showIconDialog() {
-        addSubscription(mRxBus.toObserverable(ChangeIconTypeEvent.class).subscribe(
-                changeIconTypeEvent -> {
-                    mChangeIcons.setSummary(changeIconTypeEvent.type == 0 ? mIconsText[0] : mIconsText[1]);
-                    showSnack();
-                }
-        ));
         IconDialogFragment.instance().show(getFragmentManager(), "IconDialog");
     }
 
@@ -160,14 +160,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         });
     }
 
-    private void addSubscription(Subscription subscription) {
-        mCompositeSubscription.add(subscription);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mCompositeSubscription.unsubscribe();
+
+        mBus.unregister(this);
     }
 }
 

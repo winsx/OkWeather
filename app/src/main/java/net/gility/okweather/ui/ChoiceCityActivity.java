@@ -4,25 +4,24 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.hwangjr.rxbus.Bus;
 import com.squareup.picasso.Picasso;
 
 import net.gility.okweather.R;
 import net.gility.okweather.dagger.Injector;
-import net.gility.okweather.model.ChangeCityEvent;
+import net.gility.okweather.model.BusAction;
 import net.gility.okweather.model.City;
 import net.gility.okweather.model.Province;
 import net.gility.okweather.storage.LocationDB;
 import net.gility.okweather.storage.Preferences;
 import net.gility.okweather.ui.adapter.CityAdapter;
 import net.gility.okweather.utils.AppUtils;
-import net.gility.okweather.utils.RxBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +29,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
-import jp.wasabeef.recyclerview.animators.FlipInRightYAnimator;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import rx.Observable;
 import rx.Subscription;
@@ -68,7 +65,7 @@ public class ChoiceCityActivity extends BaseActivity {
     @Inject LocationDB mLocationDB;
     @Inject Picasso mPicasso;
     @Inject Preferences mPreferences;
-    @Inject RxBus mRxBus;
+    @Inject Bus mBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +73,7 @@ public class ChoiceCityActivity extends BaseActivity {
         setContentView(R.layout.activity_choice_city);
 
         Injector.instance.inject(this);
+        mBus.register(this);
 
         initView();
 
@@ -121,7 +119,7 @@ public class ChoiceCityActivity extends BaseActivity {
                 selectedCity = cityList.get(pos);
                 String cityName = AppUtils.replaceCity(selectedCity.CityName);
                 mPreferences.setCityName(cityName);
-                mRxBus.post(new ChangeCityEvent(cityName));
+                mBus.post(BusAction.CHANGE_CITY, cityName);
                 finish();
             }
         });
@@ -200,7 +198,9 @@ public class ChoiceCityActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         mCompositeSubscription.unsubscribe();
+        mBus.unregister(this);
     }
 
 }

@@ -2,19 +2,19 @@ package net.gility.okweather.ui.fragment;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hwangjr.rxbus.Bus;
+
 import net.gility.okweather.R;
 import net.gility.okweather.dagger.Injector;
-import net.gility.okweather.model.ChangeIconTypeEvent;
+import net.gility.okweather.model.BusAction;
 import net.gility.okweather.storage.Preferences;
 import net.gility.okweather.ui.cell.IconDialogCell;
-import net.gility.okweather.utils.RxBus;
 
 import javax.inject.Inject;
 
@@ -24,29 +24,40 @@ import javax.inject.Inject;
 
 public class IconDialogFragment extends DialogFragment {
     @Inject Preferences mPreferences;
-    @Inject RxBus mRxbus;
+    @Inject Bus mBus;
 
     public static IconDialogFragment instance() {
         return new IconDialogFragment();
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Injector.instance.inject(this);
+        mBus.register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mBus.unregister(this);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
-        Injector.instance.inject(this);
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        IconDialogCell  iconDialogCell = (IconDialogCell) inflater.inflate(R.layout.cell_dialog_icon, (ViewGroup) getActivity().findViewById(R.id.dialog_root));
+        IconDialogCell iconDialogCell = (IconDialogCell) inflater.inflate(R.layout.cell_dialog_icon, (ViewGroup) getActivity().findViewById(R.id.dialog_root));
         iconDialogCell.checkType(mPreferences.getIconType());
         iconDialogCell.setOnDoneClickListenner(new IconDialogCell.OnDoneClickListenner() {
             @Override
             public void onDoneClickListenner(View view, int type) {
                 mPreferences.setIconType(type);
+                mBus.post(BusAction.CHANGE_ICONS_TYPE, type);
+
                 switch (type) {
                     case IconDialogCell.TYPE_ONE:
                         mPreferences.begin()
@@ -83,11 +94,11 @@ public class IconDialogFragment extends DialogFragment {
                                 .putInt("雨夹雪", R.mipmap.type_two_snowrain)
                                 .apply();
                         break;
-                    }
-                mRxbus.post(new ChangeIconTypeEvent(type));
-                IconDialogFragment.this.dismiss();
                 }
-            });
+
+                IconDialogFragment.this.dismiss();
+            }
+        });
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(iconDialogCell);
         return builder.create();
     }

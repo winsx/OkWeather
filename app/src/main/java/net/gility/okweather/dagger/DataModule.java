@@ -3,6 +3,7 @@ package net.gility.okweather.dagger;
 import android.app.Application;
 import android.support.constraint.BuildConfig;
 
+import com.hwangjr.rxbus.Bus;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -11,7 +12,6 @@ import net.gility.okweather.storage.ACache;
 import net.gility.okweather.storage.LocationDB;
 import net.gility.okweather.storage.Preferences;
 import net.gility.okweather.utils.AndroidUtils;
-import net.gility.okweather.utils.RxBus;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -49,8 +49,8 @@ public class DataModule {
         return RxPermissions.getInstance(app);
     }
 
-    @Provides @Singleton RxBus provideRxBus() {
-        return new RxBus();
+    @Provides @Singleton Bus ProvideBus() {
+        return new Bus();
     }
 
     @Provides @Singleton

@@ -18,25 +18,24 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.hwangjr.rxbus.Bus;
+import com.hwangjr.rxbus.annotation.Subscribe;
+import com.hwangjr.rxbus.annotation.Tag;
+import com.hwangjr.rxbus.thread.EventThread;
 import com.squareup.picasso.Picasso;
 
 import net.gility.okweather.BuildConfig;
 import net.gility.okweather.R;
 import net.gility.okweather.android.AutoUpdateService;
 import net.gility.okweather.dagger.Injector;
-import net.gility.okweather.model.ChangeCityEvent;
-import net.gility.okweather.model.UpdateWeatherErrorEvent;
-import net.gility.okweather.model.UpdateWeatherEvent;
+import net.gility.okweather.model.BusAction;
 import net.gility.okweather.storage.Preferences;
 import net.gility.okweather.ui.fragment.MainFragment;
 import net.gility.okweather.utils.AndroidUtils;
 import net.gility.okweather.utils.DoubleClickExit;
-import net.gility.okweather.utils.RxBus;
 import net.gility.okweather.utils.RxDrawer;
 
 import java.util.Calendar;
@@ -44,9 +43,7 @@ import java.util.Calendar;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -67,10 +64,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.nav_view) NavigationView mNavigationView;
 
     @Inject Preferences mPreferences;
-    @Inject RxBus mRxBus;
     @Inject Picasso mPicasso;
-
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    @Inject Bus mBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +73,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_main);
 
         Injector.instance.inject(this);
+        mBus.register(this);
 
         initView();
         initDrawer();
-        initRx();
 
         FragmentTransaction fm = getFragmentManager().beginTransaction();
         fm.replace(R.id.main_content, MainFragment.instance());
@@ -94,23 +89,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onDestroy() {
         super.onDestroy();
 
-        mCompositeSubscription.unsubscribe();
+        mBus.unregister(this);
     }
 
-    private void initRx() {
-        addSubscription(mRxBus.toObserverable(UpdateWeatherErrorEvent.class)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe( error -> {
-                    Snackbar.make(mFab, "网络不好", Snackbar.LENGTH_INDEFINITE).setAction("重试", v -> {
-                        mRxBus.post(new UpdateWeatherEvent());
-                    }).show();
-                }));
+    @Subscribe(
+            thread = EventThread.MAIN_THREAD,
+            tags = {
+                    @Tag(BusAction.CHANGE_CITY)
+            }
+    )
+    public void changeCityAction(String city) {
+        mCollapsingToolbarLayout.setTitle(city);
+    }
 
-        addSubscription(mRxBus.toObserverable(ChangeCityEvent.class)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(event -> {
-                                    mCollapsingToolbarLayout.setTitle(event.city);
-                                }));
+    @Subscribe(
+            tags = {
+                    @Tag(BusAction.UPDATE_WEATHER_ERROR)
+            }
+    )
+    public void updateWeatherErrorAction(Throwable e) {
+        Snackbar.make(mFab, "网络不好", Snackbar.LENGTH_INDEFINITE).setAction("重试", v -> {
+            mBus.post(BusAction.UPDATE_WEATHER, e);
+        }).show();
     }
 
     @Override
@@ -224,9 +224,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 finish();
             }
         }
-    }
-
-    private void addSubscription(Subscription subscription) {
-        mCompositeSubscription.add(subscription);
     }
 }

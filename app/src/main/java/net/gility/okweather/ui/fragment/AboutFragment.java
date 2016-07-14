@@ -1,14 +1,11 @@
 package net.gility.okweather.ui.fragment;
 
-import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
-
 import android.preference.PreferenceFragment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +13,6 @@ import android.view.View;
 
 import net.gility.okweather.R;
 import net.gility.okweather.dagger.Injector;
-import net.gility.okweather.ui.AboutActivity;
 import net.gility.okweather.utils.AppUtils;
 
 import javax.inject.Inject;

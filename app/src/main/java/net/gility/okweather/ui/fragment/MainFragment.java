@@ -11,8 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -21,15 +19,16 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.hwangjr.rxbus.Bus;
+import com.hwangjr.rxbus.annotation.Subscribe;
+import com.hwangjr.rxbus.annotation.Tag;
+import com.hwangjr.rxbus.thread.EventThread;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import net.gility.okweather.R;
 import net.gility.okweather.config.BuildVars;
 import net.gility.okweather.dagger.Injector;
-import net.gility.okweather.model.ChangeCityEvent;
-import net.gility.okweather.model.ChangeIconTypeEvent;
-import net.gility.okweather.model.UpdateWeatherErrorEvent;
-import net.gility.okweather.model.UpdateWeatherEvent;
+import net.gility.okweather.model.BusAction;
 import net.gility.okweather.model.Weather;
 import net.gility.okweather.storage.ACache;
 import net.gility.okweather.storage.Preferences;
@@ -37,18 +36,14 @@ import net.gility.okweather.ui.MainActivity;
 import net.gility.okweather.ui.adapter.WeatherAdapter;
 import net.gility.okweather.utils.ApiUtils;
 import net.gility.okweather.utils.AppUtils;
-import net.gility.okweather.utils.RxBus;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.recyclerview.animators.FadeInAnimator;
-import jp.wasabeef.recyclerview.animators.FlipInRightYAnimator;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -68,7 +63,7 @@ public class MainFragment extends Fragment implements AMapLocationListener {
     @BindView(R.id.iv_erro) ImageView mErrorImageView;
 
     @Inject Preferences mPreferences;
-    @Inject RxBus mRxBus;
+    @Inject Bus mBus;
     @Inject RxPermissions mRxPermissions;
     @Inject ACache mACache;
     @Inject ApiUtils mApiUtils;
@@ -80,6 +75,13 @@ public class MainFragment extends Fragment implements AMapLocationListener {
         return new MainFragment();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Injector.instance.inject(this);
+        mBus.register(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,15 +89,7 @@ public class MainFragment extends Fragment implements AMapLocationListener {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, rootView);
-        Injector.instance.inject(this);
 
-        initView();
-        initRx();
-
-        return rootView;
-    }
-
-    private void initView() {
         mRefreshLayout.setOnRefreshListener(() -> mRefreshLayout.postDelayed(this::load, 1000));
         mProgressBar.setVisibility(View.VISIBLE);
         mRecyclerView.setHasFixedSize(true);
@@ -104,9 +98,7 @@ public class MainFragment extends Fragment implements AMapLocationListener {
 
         mAdapter.setOnItemClickListener(weather -> WeatherDialogFragment.instance(weather)
                 .show(getFragmentManager(), "weather_dialog"));
-    }
 
-    private void initRx() {
         // CheckVersion.checkVersion(this);
         // https://github.com/tbruyelle/RxPermissions
         mRxPermissions.request(Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -118,26 +110,39 @@ public class MainFragment extends Fragment implements AMapLocationListener {
                     }
                 });
 
+        return rootView;
+    }
 
-        addSubscription(mRxBus.toObserverable(ChangeCityEvent.class)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(changeCityEvent -> {
-                    mRefreshLayout.setRefreshing(true);
-                    load(changeCityEvent.city);
-                }));
 
-        addSubscription(mRxBus.toObserverable(ChangeIconTypeEvent.class)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(changeIconTypeEvent -> {
-                    load();
-                    //mIconChanged = true;
-                }));
+    @Subscribe(
+            thread = EventThread.MAIN_THREAD,
+            tags = {
+                    @Tag(BusAction.CHANGE_CITY)
+            }
+    )
+    public void changeCityAction(String city) {
+        mRefreshLayout.setRefreshing(true);
+        load(city);
+    }
 
-        addSubscription(mRxBus.toObserverable(UpdateWeatherEvent.class)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> {
-                    load();
-                }));
+    @Subscribe(
+            thread = EventThread.MAIN_THREAD,
+            tags = {
+                    @Tag(BusAction.CHANGE_ICONS_TYPE)
+            }
+    )
+    public void changeIconTypeAction(Integer type) {
+        load();
+    }
+
+    @Subscribe(
+            thread = EventThread.MAIN_THREAD,
+            tags = {
+                    @Tag(BusAction.UPDATE_WEATHER)
+            }
+    )
+    public void updateWeatherRetryAction(Throwable e) {
+        load();
     }
 
     private void load() {
@@ -224,6 +229,7 @@ public class MainFragment extends Fragment implements AMapLocationListener {
             mLocationClient.unRegisterLocationListener(this);
         }
         mCompositeSubscription.unsubscribe();
+        mBus.unregister(this);
     }
 
     @Override
@@ -271,14 +277,14 @@ public class MainFragment extends Fragment implements AMapLocationListener {
 
         @Override
         public void onCompleted() {
-            Toast.makeText(getActivity(), getString(R.string.complete), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getActivity(), getString(R.string.complete), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onError(Throwable e) {
             mErrorImageView.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
-            mRxBus.post(new UpdateWeatherErrorEvent(e));
+            mBus.post(BusAction.UPDATE_WEATHER_ERROR, e);
         }
 
         @Override
