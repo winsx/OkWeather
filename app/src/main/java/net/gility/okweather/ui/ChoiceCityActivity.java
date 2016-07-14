@@ -30,7 +30,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
+import jp.wasabeef.recyclerview.animators.FlipInRightYAnimator;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -107,6 +110,7 @@ public class ChoiceCityActivity extends BaseActivity {
         mRecyclerview.setItemAnimator(new FadeInUpAnimator());
         mAdapter = new CityAdapter(this, dataList);
         mRecyclerview.setAdapter(mAdapter);
+        mRecyclerview.setItemAnimator(new LandingAnimator());
 
         mAdapter.setOnItemClickListener((view, pos) -> {
             if (currentLevel == LEVEL_PROVINCE) {
