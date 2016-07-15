@@ -11,6 +11,7 @@
 #### 使用的开源库
 * [Rxjava][1]
 * [RxAndroid][2]
+* [RxBus][10]
 * [Retrofit][3]
 * [OkHttp][9]
 * [Picasso][4]
@@ -28,3 +29,4 @@
 [7]: https://github.com/yangfuhai/ASimpleCache
 [8]: https://github.com/JakeWharton/butterknife
 [9]: https://github.com/square/okhttp
+[10]: https://github.com/AndroidKnife/RxBus
