@@ -35,14 +35,11 @@ public class IconDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         Injector.instance.inject(this);
-        mBus.register(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        mBus.unregister(this);
     }
 
     @Override
