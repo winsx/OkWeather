@@ -196,19 +196,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .unsubscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aVoid -> {
+                    Class clazz = null;
                     switch (item.getItemId()) {
                         case R.id.nav_set:
-                            Intent intentSetting = new Intent(MainActivity.this, SettingsActivity.class);
-                            startActivity(intentSetting);
+                            clazz = SettingsActivity.class;
                             break;
                         case R.id.nav_about:
-                            startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                            clazz = AboutActivity.class;
                             break;
                         case R.id.nav_city:
-                            Intent intentCity = new Intent(MainActivity.this, ChoiceCityActivity.class);
-                            startActivity(intentCity);
+                            clazz = ChoiceCityActivity.class;
                             break;
                     }
+                    startActivity(new Intent(MainActivity.this, clazz));
                 });
         return false;
     }
