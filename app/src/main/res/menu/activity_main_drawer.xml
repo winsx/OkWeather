@@ -9,8 +9,7 @@
         <item
             android:id="@+id/nav_multi_cities"
             android:title="@string/multi_cities"
-            android:icon="@drawable/ic_multi_cities"
-            />
+            android:icon="@drawable/ic_multi_cities" />
     </group>
 
     <item android:title="@string/app_name">

@@ -207,6 +207,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         case R.id.nav_city:
                             clazz = ChoiceCityActivity.class;
                             break;
+                        case R.id.nav_multi_cities:
+                            clazz = ChoiceCityActivity.class;
+                            break;
                     }
                     startActivity(new Intent(MainActivity.this, clazz));
                 });
