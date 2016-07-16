@@ -70,6 +70,9 @@ public class MainFragment extends Fragment implements AMapLocationListener {
 
     private WeatherAdapter mAdapter;
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private boolean mShouldReload;
+    private boolean mShouldChangeIcons;
+    private String mLoadCityName;
 
     public static MainFragment instance() {
         return new MainFragment();
@@ -80,6 +83,23 @@ public class MainFragment extends Fragment implements AMapLocationListener {
         super.onCreate(savedInstanceState);
         Injector.instance.inject(this);
         mBus.register(this);
+
+        mLoadCityName = mPreferences.getCityName();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mShouldReload) {
+            load();
+            mShouldReload = false;
+            return;
+        }
+        if (mShouldChangeIcons) {
+            mAdapter.notifyDataSetChanged();
+            mShouldChangeIcons = false;
+        }
     }
 
     @Nullable
@@ -121,8 +141,8 @@ public class MainFragment extends Fragment implements AMapLocationListener {
             }
     )
     public void changeCityAction(String city) {
-        mRefreshLayout.setRefreshing(true);
-        load(city);
+        mShouldReload = true;
+        mLoadCityName = city;
     }
 
     @Subscribe(
@@ -132,7 +152,7 @@ public class MainFragment extends Fragment implements AMapLocationListener {
             }
     )
     public void changeIconTypeAction(Integer type) {
-        load();
+        mShouldChangeIcons = true;
     }
 
     @Subscribe(
@@ -145,16 +165,12 @@ public class MainFragment extends Fragment implements AMapLocationListener {
         load();
     }
 
-    private void load() {
-        load(mPreferences.getCityName());
-    }
-
     /**
      * 优化网络+缓存逻辑
      * 优先网络
      */
-    private void load(String cityName) {
-        addSubscription(fetchDataFromNetWork(cityName)
+    private void load() {
+        addSubscription(fetchDataFromNetWork(mLoadCityName)
                 .doOnError(throwable -> {
                     mErrorImageView.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.GONE);
