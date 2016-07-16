@@ -2,12 +2,10 @@ package net.gility.okweather.ui;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -27,14 +25,12 @@ import com.hwangjr.rxbus.annotation.Tag;
 import com.hwangjr.rxbus.thread.EventThread;
 import com.squareup.picasso.Picasso;
 
-import net.gility.okweather.BuildConfig;
 import net.gility.okweather.R;
 import net.gility.okweather.android.AutoUpdateService;
 import net.gility.okweather.dagger.Injector;
 import net.gility.okweather.model.BusAction;
 import net.gility.okweather.storage.Preferences;
 import net.gility.okweather.ui.fragment.MainFragment;
-import net.gility.okweather.utils.AndroidUtils;
 import net.gility.okweather.utils.DoubleClickExit;
 import net.gility.okweather.utils.RxDrawer;
 
@@ -51,7 +47,7 @@ import static android.widget.Toast.LENGTH_SHORT;
  * @author Alimy
  */
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends InjectActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.app_bar) AppBarLayout mAppBarLayout;
     @BindView(R.id.toolbar) Toolbar mToolbar;

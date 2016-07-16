@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public class SettingsActivity extends BaseActivity {
+public class SettingsActivity extends InjectActivity {
     @Inject Preferences mPreferences;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.appbar_layout) AppBarLayout mAppBar;

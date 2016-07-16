@@ -41,7 +41,7 @@ import rx.subscriptions.CompositeSubscription;
  * @author Alimy
  */
 
-public class ChoiceCityActivity extends BaseActivity {
+public class ChoiceCityActivity extends InjectActivity {
     public static final int LEVEL_PROVINCE = 1;
     public static final int LEVEL_CITY = 2;
 

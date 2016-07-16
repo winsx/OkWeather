@@ -22,7 +22,7 @@ import butterknife.BindView;
  * @author Alimy
  */
 
-public class AboutActivity extends BaseActivity {
+public class AboutActivity extends InjectActivity {
 
     AboutFragment mAboutFragment = new AboutFragment();
 
