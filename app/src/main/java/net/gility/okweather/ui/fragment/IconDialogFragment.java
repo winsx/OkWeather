@@ -52,9 +52,6 @@ public class IconDialogFragment extends DialogFragment {
         iconDialogCell.setOnDoneClickListenner(new IconDialogCell.OnDoneClickListenner() {
             @Override
             public void onDoneClickListenner(View view, int type) {
-                mPreferences.setIconType(type);
-                mBus.post(BusAction.CHANGE_ICONS_TYPE, type);
-
                 switch (type) {
                     case IconDialogCell.TYPE_ONE:
                         mPreferences.begin()
@@ -93,6 +90,8 @@ public class IconDialogFragment extends DialogFragment {
                         break;
                 }
 
+                mPreferences.setIconType(type);
+                mBus.post(BusAction.CHANGE_ICONS_TYPE, type);
                 IconDialogFragment.this.dismiss();
             }
         });

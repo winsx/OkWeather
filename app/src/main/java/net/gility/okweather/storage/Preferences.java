@@ -4,9 +4,6 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.Map;
-import java.util.function.BiConsumer;
-
 public class Preferences {
 
     public static final String FIRST_START = "first_start"; //第一次运行
