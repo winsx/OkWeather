@@ -132,12 +132,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         //fab
         mFab.setOnClickListener(v -> showFabDialog());
+        /*************************
         if (AndroidUtils.checkDeviceHasNavigationBar(this) || BuildConfig.DEBUG) {
+
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mFab.getLayoutParams();
             Resources res = getResources();
             int fabMargin = AndroidUtils.dip2px(this, res.getDimension(R.dimen.fab_margin)) / 3;
             lp.setMargins(fabMargin, fabMargin, fabMargin, AndroidUtils.getNavigationBarHeight(this) + fabMargin);
+
         }
+         *************************/
     }
 
     private void showEggs() {
